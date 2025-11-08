@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Maneawa 28h チェッカー</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Maneawa 28h チェッカー</h1>
+      <nav class="main-nav">
+        <button data-section="employees" class="active">従業員管理</button>
+        <button data-section="shifts">シフト管理</button>
+        <button data-section="seven-day">7日間チェック</button>
+        <button data-section="reports">レポート・バックアップ</button>
+        <button data-section="settings">設定</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="section-employees" class="active">
+        <h2>従業員管理</h2>
+        <form id="employee-form" class="card">
+          <input type="hidden" id="employee-id" />
+          <div class="form-row">
+            <label for="employee-name">氏名 <span class="required">*</span></label>
+            <input id="employee-name" type="text" required />
+          </div>
+          <div class="form-row">
+            <label for="employee-notes">備考</label>
+            <textarea id="employee-notes" rows="2" placeholder="在留資格、部署など"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary">保存</button>
+            <button type="button" id="employee-cancel">リセット</button>
+          </div>
+        </form>
+
+        <div class="card">
+          <h3>従業員一覧</h3>
+          <table id="employee-table">
+            <thead>
+              <tr>
+                <th>氏名</th>
+                <th>備考</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="section-shifts">
+        <h2>シフト管理</h2>
+        <form id="shift-form" class="card">
+          <input type="hidden" id="shift-id" />
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="shift-employee">従業員 <span class="required">*</span></label>
+              <select id="shift-employee" required></select>
+            </div>
+            <div class="form-row">
+              <label for="shift-date">日付 <span class="required">*</span></label>
+              <input type="date" id="shift-date" required />
+            </div>
+            <div class="form-row">
+              <label for="shift-start">開始時刻 <span class="required">*</span></label>
+              <input type="time" id="shift-start" required />
+            </div>
+            <div class="form-row">
+              <label for="shift-end">終了時刻 <span class="required">*</span></label>
+              <input type="time" id="shift-end" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary">保存</button>
+            <button type="button" id="shift-cancel">リセット</button>
+          </div>
+          <p class="help-text">終了が開始より早い場合は翌日扱いとして計算します。</p>
+        </form>
+
+        <div class="card">
+          <div class="toolbar">
+            <label>
+              表示月：
+              <input type="month" id="shift-month" />
+            </label>
+            <label class="toggle-group">
+              <input type="radio" name="shift-view" value="date" checked /> 日付順
+            </label>
+            <label class="toggle-group">
+              <input type="radio" name="shift-view" value="employee" /> 従業員別
+            </label>
+          </div>
+          <div id="shift-list"></div>
+        </div>
+      </section>
+
+      <section id="section-seven-day">
+        <h2>直近7日間チェック</h2>
+        <div class="card">
+          <div class="toolbar">
+            <label>
+              基準日：
+              <input type="date" id="reference-date" />
+            </label>
+            <label>
+              フィルター：
+              <select id="status-filter">
+                <option value="all">全て表示</option>
+                <option value="warning">注意以上</option>
+                <option value="ng">NGのみ</option>
+              </select>
+            </label>
+          </div>
+          <table id="summary-table">
+            <thead>
+              <tr>
+                <th>従業員名</th>
+                <th>直近7日間合計時間</th>
+                <th>判定</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="card" id="detail-card">
+          <h3 id="detail-title">詳細</h3>
+          <table id="detail-table">
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>勤務時間</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <p id="detail-total"></p>
+        </div>
+      </section>
+
+      <section id="section-reports">
+        <h2>レポート・バックアップ</h2>
+        <div class="card">
+          <h3>CSVエクスポート</h3>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="export-month">シフトCSV：対象月</label>
+              <input type="month" id="export-month" />
+              <button id="export-shifts" class="primary">エクスポート</button>
+            </div>
+            <div class="form-row">
+              <label for="export-reference">7日間チェックCSV：基準日</label>
+              <input type="date" id="export-reference" />
+              <button id="export-status" class="primary">エクスポート</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>バックアップ</h3>
+          <p>現在のデータベースファイルをコピーして保存します。保存したファイルがバックアップです。</p>
+          <button id="backup-button" class="primary">バックアップを作成</button>
+        </div>
+      </section>
+
+      <section id="section-settings">
+        <h2>設定・情報</h2>
+        <div class="card">
+          <h3>利用規約（自己責任）</h3>
+          <button id="show-terms" class="primary">利用規約を表示</button>
+        </div>
+        <div class="card">
+          <h3>バージョン情報</h3>
+          <p><strong>アプリ名：</strong> <span id="app-name"></span></p>
+          <p><strong>バージョン：</strong> <span id="app-version"></span></p>
+          <p>
+            <strong>問い合わせ：</strong>
+            <span id="app-contact"></span>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="terms-dialog">
+      <h2>自己責任でご利用ください</h2>
+      <div class="dialog-body">
+        <p>
+          本ツールは直近7日間の合計勤務時間を簡易に確認するための補助ツールです。法的な適合性を保証するものではなく、
+          利用者自身の責任においてご利用ください。
+        </p>
+        <p>
+          開発者は本ツールの利用によって生じた一切の損害について責任を負いません。必ずご自身でも確認し、必要に応じて専門家に相談してください。
+        </p>
+      </div>
+      <div class="dialog-actions">
+        <button id="terms-accept" class="primary">同意して利用</button>
+        <button id="terms-close">閉じる</button>
+      </div>
+    </dialog>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="renderer/renderer.js"></script>
+  </body>
+</html>
