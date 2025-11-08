@@ -1,0 +1,29 @@
+{
+  "name": "maneawa",
+  "version": "1.0.0",
+  "description": "Offline 28-hour rule compliance checker",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "npm run build:main && npm run build:renderer && node scripts/copy-assets.js",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "tsc -p tsconfig.renderer.json",
+    "start": "npm run build && electron .",
+    "copy:assets": "node scripts/copy-assets.js"
+  },
+  "keywords": [
+    "electron",
+    "sqlite",
+    "compliance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "electron": "^28.2.0",
+    "sql.js": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "rootDir": "src",
+    "outDir": "dist/renderer",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "types": [],
+    "lib": ["ES2020", "DOM"],
+    "sourceMap": true
+  },
+  "include": ["src/renderer/**/*.ts", "src/common/**/*.ts"],
+  "exclude": ["node_modules"]
+}
