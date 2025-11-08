@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
+    "@types/sql.js": "^1.4.9",
     "typescript": "^5.4.5"
   }
 }

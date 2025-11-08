@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import initSqlJs, { Database as SqlJsDatabase, SqlJsStatic } from 'sql.js';
+import initSqlJs, { Database as SqlJsDatabase, SqlJsStatic, BindParams } from 'sql.js';
 import {
   Employee,
   EmployeeFormData,
@@ -55,7 +55,7 @@ export class ComplianceDatabase {
   private async bootstrap(): Promise<void> {
     await fs.mkdir(path.dirname(this.databasePath), { recursive: true });
     this.SQL = await initSqlJs({
-      locateFile: (file) => path.join(this.wasmDirectory, file)
+      locateFile: (file: string) => path.join(this.wasmDirectory, file)
     });
 
     const exists = await this.fileExists(this.databasePath);
@@ -122,7 +122,7 @@ export class ComplianceDatabase {
     await fs.writeFile(this.databasePath, Buffer.from(data));
   }
 
-  private queryAll<T>(sql: string, params: unknown[] = []): T[] {
+  private queryAll<T>(sql: string, params: BindParams = []): T[] {
     const statement = this.db.prepare(sql);
     try {
       statement.bind(params);
@@ -136,12 +136,12 @@ export class ComplianceDatabase {
     }
   }
 
-  private queryOne<T>(sql: string, params: unknown[] = []): T | undefined {
+  private queryOne<T>(sql: string, params: BindParams = []): T | undefined {
     const rows = this.queryAll<T>(sql, params);
     return rows[0];
   }
 
-  private run(sql: string, params: unknown[] = []): void {
+  private run(sql: string, params: BindParams = []): void {
     this.db.run(sql, params);
   }
 
